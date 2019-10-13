@@ -51,7 +51,7 @@ def face_classification(train_steps='30',
     # change code and dataset to pvc
     align_dataset = ds1.ContainerOp(
         name="aligin_dataset",
-        image="mtcnn-tensorflow-gpu",
+        image="tensorflow-gpu/tensorflow-mtcnn-gpu:1.2.1",
         command=["/bin/sh" "-c", "echo 'begin moving data';mv /root/tensorflow-MTCNN %s/;echo 'moving is finished;"
                  % str(dataset_dir)]
     )
@@ -60,7 +60,7 @@ def face_classification(train_steps='30',
     # train model
     train_pnet = ds1.ContainerOp(
         name='train_pnet',
-        image='mtcnn-tensorflow-gpu',
+        image='tensorflow-gpu/tensorflow-mtcnn-gpu:1.2.1',
         command=["/bin/sh", "-c", "cd /dataset/tensorflow-MTCNN/preprocess; python gen_12net_data.py;"
                                   "python gen_landmark_aug.py 12; python gen_imglist_pnet.py;"
                                   "python gen_tfrecords.py 12; python ../train/train.py 12"]
@@ -69,7 +69,7 @@ def face_classification(train_steps='30',
 
     train_rnet = ds1.ContainerOp(
         name="train_rnet",
-        image="mtcnn-tensorflow-gpu",
+        image="tensorflow-gpu/tensorflow-mtcnn-gpu:1.2.1",
         command=["/bin/sh", "-c", "cd /dataset/tensorflow-MTCNN/preprocess; python gen_hard_example.py 12;"
                                   "python gen_landmark_aug.py 24; python gen_tfrecords.py 24;"
                                   "python ../train/train.py 24"]
@@ -78,7 +78,7 @@ def face_classification(train_steps='30',
 
     train_onet = ds1.ContainerOp(
         name="train_onet",
-        image="mtcnn-tensorflow-gpu",
+        image="tensorflow-gpu/tensorflow-mtcnn-gpu:1.2.1",
         command=["/bin/sh", "-c", "cd /dataset/tensorflow-MTCNN/preprocess; python gen_hard_example.py 24;"
                                   "python gen_landmark_aug.py 48; python gen_tfrecords.py 48;"
                                   "python ../train/train.py 48"]

@@ -50,7 +50,7 @@ def face_classification(train_steps='30',
     # change code and dataset to pvc
     align_dataset = ds1.ContainerOp(
         name="aligin_dataset",
-        image="face-classifier-gpu",
+        image="tensorflow-gpu/face-classification-gpu:1.3.0",
         command=["/bin/sh" "-c", "echo 'begin moving data';mv /root/face_classification %s/;echo 'moving is finished;"
                  % str(dataset_dir)]
     )
@@ -59,14 +59,14 @@ def face_classification(train_steps='30',
     # train model
     train_emotion = ds1.ContainerOp(
         name='train_emotion',
-        image='face-classifier-gpu',
+        image='tensorflow-gpu/face-classification-gpu:1.3.0',
         command=["/bin/sh", "-c", "cd /dataset/face_classification/src; python3 train_emotion_classifier.py"]
     ).add_resource_limit("nvidia.com/gpu", 1)
     train_emotion.after(align_dataset)
 
     train_gender = ds1.ContainerOp(
         name="train_gender",
-        image="face-classifier-gpu",
+        image="tensorflow-gpu/face-classification-gpu:1.3.0",
         command=["/bin/sh", "-c", "cd /dataset/face_classification/src; python3 train_emotion_classifier.py"]
     ).add_resource_limit("nvidia.com/gpu", 1)
     train_gender.after(train_emotion)
